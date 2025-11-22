@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seller Registration</title>
+    <link href="{% static 'accounts/style.css' %}" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <h2>Create Seller Account</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            {{ form.username }}
+            {{ form.username.errors }}
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="id_email">Email</label>
+            {{ form.email }}
+            {{ form.email.errors }}
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            {{ form.password2 }}
+            {{ form.password2.errors }}
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="form-group">
+            <label for="id_profile_picture">Profile Picture</label>
+            {{ form.profile_picture }}
+        </div>
+
+        <button type="submit">Register as Seller</button>
+    </form>
+
+    <div class="links">
+        <a href="{% url 'login' %}">← Back to Login</a>
+    </div>
+</div>
+
+</body>
+</html>

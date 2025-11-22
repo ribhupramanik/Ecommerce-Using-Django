@@ -5,6 +5,7 @@ import random
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Q
 
 # Create your views here.
 
@@ -13,6 +14,7 @@ def user_register(request):
         form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
+            user.username = user.email
             user.role = "USER"
             user.save()
             return redirect('login')
@@ -26,6 +28,7 @@ def seller_register(request):
         form = SellerRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
+            user.username = user.email
             user.role = 'SELLER'
             user.save()
             return redirect('login')
@@ -36,25 +39,35 @@ def seller_register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        login_value = request.POST.get('login_value')  
         password = request.POST.get('password')
 
-        user = authenticate(username=email, password=password)
+        try:
+            # Search user by username OR email
+            user = CustomUser.objects.get(
+                Q(username=login_value) | Q(email=login_value)
+            )
+        except CustomUser.DoesNotExist:
+            return render(request, 'accounts/login.html', {
+                'error': "User not found"
+            })
 
-        if user:
+        if user.check_password(password):
+            
             otp = str(random.randint(100000, 999999))
             user.otp = otp
             user.save()
 
             send_mail(
-                subject = "Your OTP",
-                message= f"Your OTP is {otp}",
-                from_email = settings.EMAIL_HOST_USER,
-                recipient_list=[user.email],
+                subject="Your OTP",
+                message=f"Your OTP is {otp}",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],   # Always send to registered email
             )
 
             request.session['user_id'] = user.id
             return redirect('verify_otp')
+
         
         else:
             return render(request, 'accounts/login.html',{
