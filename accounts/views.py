@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, SellerRegistrationForm
 from .models import CustomUser
+import random
+from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 
@@ -14,7 +18,7 @@ def user_register(request):
             return redirect('login')
     else:
         form = UserRegistrationForm()
-        
+
     return render(request,'accounts/user_register.html', {'form':form})
 
 def seller_register(request):
@@ -29,3 +33,47 @@ def seller_register(request):
         form = SellerRegistrationForm()
 
     return render(request, 'accounts/seller_register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = authenticate(username=email, password=password)
+
+        if user:
+            otp = str(random.randint(100000, 999999))
+            user.otp = otp
+            user.save()
+
+            send_mail(
+                subject = "Your OTP",
+                message= f"Your OTP is {otp}",
+                from_email = settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+            )
+
+            request.session['user_id'] = user.id
+            return redirect('verify_otp')
+        
+        else:
+            return render(request, 'accounts/login.html',{
+                'error': "Invalid credentials"
+            })
+    
+    return render(request, 'accounts/login.html')
+
+def verify_otp(request):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        user_id = request.session.get('user_id')
+
+        user = CustomUser.objects.get(id=user_id)
+
+        if user.otp == otp:
+            user.otp = ''
+            user.save()
+            login(request, user)
+            return redirect('dashboard')
+    
+    return render(request, 'accounts/verify_otp.html')

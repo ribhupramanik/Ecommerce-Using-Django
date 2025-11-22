@@ -13,3 +13,4 @@ class CustomUser(AbstractUser):
 
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='USER')
     profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
+    otp = models.CharField(max_length=6, blank=True, null=True)
