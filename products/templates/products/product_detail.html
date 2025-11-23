@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<!-- MAIN CONTAINER -->
+<div class="max-w-6xl mx-auto p-6">
+
+    <!-- PRODUCT SECTION -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white p-6 rounded-lg shadow">
+
+        <!-- LEFT: IMAGES -->
+        <div>
+            <div class="flex gap-3 overflow-x-auto">
+                {% for image in product.images.all %}
+                    <img src="{{ image.image.url }}"
+                         class="w-32 h-32 object-contain border rounded p-2 hover:scale-105 transform transition"
+                         alt="product-image">
+                {% empty %}
+                    <div class="w-full h-40 flex items-center justify-center bg-gray-200 text-gray-500">
+                        No Images Available
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- RIGHT: PRODUCT INFO -->
+        <div>
+            <h2 class="text-2xl font-bold mb-2">{{ product.name }}</h2>
+
+            <p class="text-green-600 text-xl font-semibold mb-2">
+                ₹ {{ product.price }}
+            </p>
+
+            <p class="text-yellow-500 mb-2">
+                ⭐ {{ product.rating }} / 5
+            </p>
+
+            <p class="text-gray-600 mb-4">
+                {{ product.description }}
+            </p>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex gap-4 mt-6">
+                <a href="#" 
+                   class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-md transition">
+                    Buy Now
+                </a>
+
+                <a href="#" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md transition">
+                    Add To Cart
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- REVIEWS SECTION -->
+    <div class="bg-white p-6 mt-8 rounded-lg shadow">
+
+        <h3 class="text-xl font-semibold mb-4">Customer Reviews</h3>
+
+        {% for review in reviews %}
+        <div class="border-b pb-4 mb-4">
+            <div class="flex justify-between">
+                <span class="font-semibold text-gray-700">{{ review.user.email }}</span>
+                <span class="text-yellow-500">⭐ {{ review.rating }}</span>
+            </div>
+            <p class="text-gray-600 mt-1">
+                {{ review.review_text }}
+            </p>
+        </div>
+        {% empty %}
+            <p class="text-gray-500">No reviews yet. Be the first!</p>
+        {% endfor %}
+
+    </div>
+
+    <!-- ADD REVIEW FORM -->
+    <div class="bg-white p-6 mt-8 rounded-lg shadow">
+
+        <h3 class="text-xl font-semibold mb-4">Write a Review</h3>
+
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Rating (1–5)</label>
+                {{ form.rating }}
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-1">Your Review</label>
+                {{ form.review_text }}
+            </div>
+
+            <button type="submit" 
+                class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+                Submit Review
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

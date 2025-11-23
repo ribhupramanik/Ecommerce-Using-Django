@@ -3,57 +3,95 @@
 <html>
 <head>
     <title>User Registration</title>
-    <link href="{% static 'accounts/style.css' %}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-blue-900 to-indigo-800 min-h-screen flex items-center justify-center">
 
-<div class="container">
-    <h2>Create User Account</h2>
+<div class="bg-white w-full max-w-md rounded-xl shadow-xl p-8">
 
-    <form method="POST" enctype="multipart/form-data">
+    <!-- Heading -->
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">
+        Create User Account
+    </h2>
+
+    <p class="text-center text-gray-600 text-sm mb-6">
+        Join us and start shopping today 🛍️
+    </p>
+
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
         {% csrf_token %}
 
         <!-- Username -->
-        <div class="form-group">
-            <label for="id_username">Username</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
             {{ form.username }}
-            {{ form.username.errors }}
+            {% if form.username.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.username.errors }}</p>
+            {% endif %}
         </div>
 
         <!-- Email -->
-        <div class="form-group">
-            <label for="id_email">Email</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
             {{ form.email }}
-            {{ form.email.errors }}
+            {% if form.email.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.email.errors }}</p>
+            {% endif %}
         </div>
 
         <!-- Password -->
-        <div class="form-group">
-            <label for="id_password1">Password</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
             {{ form.password1 }}
-            {{ form.password1.errors }}
+            {% if form.password1.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.password1.errors }}</p>
+            {% endif %}
         </div>
 
         <!-- Confirm Password -->
-        <div class="form-group">
-            <label for="id_password2">Confirm Password</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
             {{ form.password2 }}
-            {{ form.password2.errors }}
+            {% if form.password2.errors %}
+                <p class="text-red-500 text-xs mt-1">{{ form.password2.errors }}</p>
+            {% endif %}
         </div>
 
         <!-- Profile Picture -->
-        <div class="form-group">
-            <label for="id_profile_picture">Profile Picture</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
             {{ form.profile_picture }}
         </div>
 
-        <button type="submit">Register</button>
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            Register
+        </button>
     </form>
 
-    <div class="links">
-        <a href="{% url 'login' %}">← Back to Login</a>
+    <!-- Back Link -->
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <a href="{% url 'login' %}" class="text-blue-600 hover:underline">
+            ← Back to Login
+        </a>
     </div>
+
 </div>
+
+<!-- Styling Django form fields with Tailwind -->
+<style>
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600;
+    }
+
+    input[type="file"] {
+        @apply w-full text-sm text-gray-600;
+    }
+</style>
 
 </body>
 </html>

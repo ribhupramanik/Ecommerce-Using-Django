@@ -3,31 +3,78 @@
 <html>
 <head>
     <title>Login</title>
-    <link href="{% static 'accounts/style.css' %}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gradient-to-br from-blue-900 to-indigo-800 min-h-screen flex items-center justify-center">
 
-<div class="container">
-    <h2>Login</h2>
+<div class="bg-white w-full max-w-md rounded-xl shadow-xl p-8">
 
+    <!-- Heading -->
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">
+        Login to Your Account
+    </h2>
+
+    <!-- Error Message -->
     {% if error %}
-        <p style="color:red; text-align:center;">{{ error }}</p>
+        <div class="bg-red-100 text-red-600 text-center py-2 px-4 rounded mb-4">
+            {{ error }}
+        </div>
     {% endif %}
 
-    <form method="POST">
+    <!-- Login Form -->
+    <form method="POST" class="space-y-4">
         {% csrf_token %}
 
-        <input type="text" name="login_value" placeholder="Enter username or email" required>
-        <input type="password" name="password" placeholder="Enter Password" required>
+        <!-- Username or Email -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Username or Email
+            </label>
+            <input type="text"
+                   name="login_value"
+                   placeholder="Enter username or email"
+                   required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+        </div>
 
-        <button type="submit">Login</button>
+        <!-- Password -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Password
+            </label>
+            <input type="password"
+                   name="password"
+                   placeholder="Enter password"
+                   required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
+            Login
+        </button>
     </form>
 
-    <div class="links">
-        <a href="{% url 'password_reset' %}">Forgot Password?</a><br>
-        <a href="{% url 'user_register' %}">New User?</a> |
-        <a href="{% url 'seller_register' %}">Become a Seller</a>
+    <!-- Links -->
+    <div class="mt-6 text-center text-sm text-gray-600 space-y-2">
+        <div>
+            <a href="{% url 'password_reset' %}" class="text-blue-600 hover:underline">
+                Forgot Password?
+            </a>
+        </div>
+
+        <div>
+            <span>Don't have an account?</span><br>
+            <a href="{% url 'user_register' %}" class="text-blue-600 hover:underline">
+                Create User Account
+            </a> |
+            <a href="{% url 'seller_register' %}" class="text-blue-600 hover:underline">
+                Become a Seller
+            </a>
+        </div>
     </div>
+
 </div>
 
 </body>

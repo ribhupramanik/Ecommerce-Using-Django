@@ -53,6 +53,10 @@ def login_view(request):
             })
 
         if user.check_password(password):
+
+            if user.role == "ADMIN":
+                login(request, user)
+                return redirect('home')
             
             otp = str(random.randint(100000, 999999))
             user.otp = otp
@@ -87,6 +91,6 @@ def verify_otp(request):
             user.otp = ''
             user.save()
             login(request, user)
-            return redirect('dashboard')
+            return redirect('home')
     
     return render(request, 'accounts/verify_otp.html')
