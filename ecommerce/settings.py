@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'products',
+    'dashboard',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
