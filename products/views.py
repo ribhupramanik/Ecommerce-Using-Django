@@ -27,7 +27,7 @@ def product_details(request, product_id):
 
     if request.method == "POST":
 
-        review = ProductReview.object.create(
+        review = ProductReview.objects.create(
             user=request.user,
             product=product,
             rating=request.POST['rating'],

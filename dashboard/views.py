@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from accounts.utils import role_required
-from products.models import Product
+from products.models import Product, ProductImage
 from products.forms import ProductForm
 
 # Create your views here.
@@ -33,5 +33,8 @@ def add_product(request):
             product = form.save(commit=False)
             product.seller = request.user
             product.save()
+            images = request.FILES.getlist("images")
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
             return redirect("dashboard_home")
     return render(request, "dashboard/add_product.html", {"form": form})
