@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import UserRegistrationForm, SellerRegistrationForm
 from .models import CustomUser
 import random
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Q
@@ -94,3 +94,7 @@ def verify_otp(request):
             return redirect('home')
     
     return render(request, 'accounts/verify_otp.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
